@@ -8,6 +8,8 @@ m = json.load(open(ROOT / 'data/ch01_modules.json'))
 GATE_CODE = 'FA2569'  # รหัสชั่วคราว รอผู้เขียนกำหนด
 GATE_HASH = hashlib.sha256(GATE_CODE.upper().encode()).hexdigest()
 DATA = json.dumps({**d, **m}, ensure_ascii=False)
+import base64
+LOGO = 'data:image/png;base64,' + base64.b64encode(open(ROOT / 'img/logo_q.png', 'rb').read()).decode()
 
 page = r'''<!DOCTYPE html>
 <html lang="th"><head><meta charset="utf-8">
@@ -19,6 +21,7 @@ page = r'''<!DOCTYPE html>
 :root{--navy:#1F3864;--bg:#F2F7FB;--b1:#E3E9F1;--g:#EAF3EC;--gL:#3C8A4E;--o:#FBF3E7;--oL:#C8932B;--r:#F6EFE9;--rL:#B5655A;--ink:#1d2430;--mut:#5b6575;--line:#d5dde8}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Sarabun,system-ui,sans-serif;font-size:17px;line-height:1.65;color:var(--ink);background:#fff}
+.brand{background:#fff;border-bottom:3px solid #E8731B;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand img{height:40px;width:auto;display:block}.brand span{font-size:13px;color:var(--mut);text-align:right}
 header{background:var(--navy);color:#fff;padding:18px 20px 0}
 header .k{font-size:13px;opacity:.85;letter-spacing:.02em}
 header h1{margin:2px 0 4px;font-size:24px;line-height:1.3}
@@ -58,12 +61,13 @@ label.ck input{margin-top:6px}
 .bar{height:10px;background:var(--b1);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gL)}
 footer{max-width:860px;margin:0 auto;padding:16px;color:var(--mut);font-size:13px;border-top:1px solid var(--line)}
 #gate{position:fixed;inset:0;background:rgba(31,56,100,.96);display:flex;align-items:center;justify-content:center;z-index:9;padding:16px}
-#gate .in{background:#fff;border-radius:12px;max-width:420px;width:100%;padding:22px}
+#gate .in{background:#fff;border-radius:12px;max-width:420px;width:100%;padding:22px}#gate .in img{height:44px;width:auto;display:block;margin:0 0 14px}
 #gate h2{margin-top:0}.err{color:var(--rL);min-height:1.4em;font-size:15px}
 .hide{display:none!important}
 @media print{header nav,#gate,.noprint,footer{display:none!important}header{background:#fff;color:#000}main{padding:0}}
 </style></head><body>
 <div id="gate"><div class="in">
+<img src="__LOGO__" alt="Dr.VIT &amp; PD">
 <h2>แอป 01 จำแนกงานนิติวิทยา</h2>
 <p>สำหรับผู้ซื้อตำรา การบัญชีนิติวิทยา ใส่รหัสที่พิมพ์ไว้ในตำรา</p>
 <div class="row" style="flex-wrap:nowrap"><input id="code" type="password" autocomplete="off" aria-label="รหัสเข้าแอป"><button class="btn" id="eye" type="button">แสดง</button></div>
@@ -72,6 +76,7 @@ footer{max-width:860px;margin:0 auto;padding:16px;color:var(--mut);font-size:13p
 <button class="btn p" id="go">เปิดแอป</button>
 </div></div>
 
+<div class="brand"><img src="__LOGO__" alt="Dr.VIT &amp; PD"><span>แอปประจำเล่ม<br>การบัญชีนิติวิทยา</span></div>
 <header><div class="k">ตำรา การบัญชีนิติวิทยา · บทที่ 1 · QR 1.2</div>
 <h1>แอป 01 จำแนกงานนิติวิทยา</h1>
 <p>ใช้ราว 30 นาที · ฝึก LO 1.3 และ LO 1.5 · อ่านหัวข้อ 1.4 และ 1.6 ก่อน</p>
@@ -218,7 +223,7 @@ function copyT(id){const t=document.getElementById(id);const txt=[...t.rows].map
 show(store.get('tab')||'m1');
 </script></body></html>'''
 
-out = page.replace('__DATA__', DATA).replace('__HASH__', GATE_HASH)
+out = page.replace('__DATA__', DATA).replace('__HASH__', GATE_HASH).replace('__LOGO__', LOGO)
 (ROOT / 'docs').mkdir(exist_ok=True)
 (ROOT / 'docs/ch01.html').write_text(out, encoding='utf-8')
 (ROOT / 'docs/.nojekyll').write_text('')
@@ -232,7 +237,8 @@ idx = f'''<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name=
 <title>แอปประจำเล่ม การบัญชีนิติวิทยา</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">{css}</head><body>
 {gate.replace('แอป 01 จำแนกงานนิติวิทยา','แอปประจำเล่ม การบัญชีนิติวิทยา')}
-<header><div class="k">Dr.VIT &amp; PD</div><h1>แอปประจำเล่ม การบัญชีนิติวิทยา</h1>
+<div class="brand"><img src="__LOGO__" alt="Dr.VIT &amp; PD"><span>แอปประจำเล่ม<br>การบัญชีนิติวิทยา</span></div>
+<header><div class="k">ตำราเล่มนี้</div><h1>แอปประจำเล่ม การบัญชีนิติวิทยา</h1>
 <p>Forensic Accounting · ดร.วิทยา อรุณศิริเพ็ชร และ อาจารย์พงษ์ธร ดวงปัญญา</p><div style="height:12px"></div></header>
 <main><h2>วิธีใช้คู่กับตำรา</h2>
 <p>แต่ละบทมีแอปฝึกที่ใช้ข้อมูลชุดเดียวกับตำรา พร้อมเฉลยและเหตุผลของแบบทดสอบปรนัย แบบประเมินตนเองตาม LO และอภิธานศัพท์ ผู้อ่านควรทำแบบทดสอบในเล่มให้ครบก่อนเปิดเฉลยในแอป</p>
@@ -248,7 +254,7 @@ $('#eye').onclick=()=>{{const i=$('#code');i.type=i.type==='password'?'text':'pa
 async function tryGate(){{const c=$('#code').value.replace(/[\\s-]/g,'').toUpperCase();const h=await sha(c);
  if(h===GATE_HASH){{try{{($('#rem').checked?localStorage:sessionStorage).setItem('fa.gate',h)}}catch(e){{}}okGate()}}else{{$('#err').textContent='รหัสไม่ถูกต้อง โปรดดูรหัสที่พิมพ์ไว้ในตำรา'}}}}
 $('#go').onclick=tryGate;$('#code').addEventListener('keydown',e=>{{if(e.key==='Enter')tryGate()}});</script></body></html>'''
-(ROOT / 'docs/index.html').write_text(idx, encoding='utf-8')
+(ROOT / 'docs/index.html').write_text(idx.replace('__LOGO__', LOGO), encoding='utf-8')
 import qrcode
 (ROOT / 'docs/qr').mkdir(exist_ok=True)
 for name, url in [('ch01', BASE + 'ch01.html'), ('index', BASE)]:
