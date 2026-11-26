@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """สร้างหน้าแอปประจำบทที่ 1 (ฉบับผู้เรียน) จาก data/ch01.json และ data/ch01_modules.json"""
 import json, hashlib, pathlib, html
+from theme import skin, CSS as THEME_CSS
 
 ROOT = pathlib.Path(__file__).parent
 d = json.load(open(ROOT / 'data/ch01.json'))
@@ -223,7 +224,7 @@ function copyT(id){const t=document.getElementById(id);const txt=[...t.rows].map
 show(store.get('tab')||'m1');
 </script></body></html>'''
 
-out = page.replace('__DATA__', DATA).replace('__HASH__', GATE_HASH).replace('__LOGO__', LOGO)
+out = skin(page.replace('__DATA__', DATA).replace('__HASH__', GATE_HASH).replace('__LOGO__', LOGO))
 (ROOT.parent / 'docs').mkdir(exist_ok=True)
 (ROOT.parent / 'docs/ch01.html').write_text(out, encoding='utf-8')
 (ROOT.parent / 'docs/.nojekyll').write_text('')
@@ -231,7 +232,7 @@ print('ok', len(out))
 
 # ---------- index + QR ----------
 BASE = 'https://drvitpd.github.io/forensic-accounting-textbook/'
-css = page[page.find('<style>'):page.find('</style>')+8]
+css = THEME_CSS
 gate = page[page.find('<div id="gate">'):page.find('<header>')]
 idx = f'''<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>แอปประจำเล่ม การบัญชีนิติวิทยา</title>
@@ -239,7 +240,7 @@ idx = f'''<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name=
 {gate.replace('แอป 01 จำแนกงานนิติวิทยา','แอปประจำเล่ม การบัญชีนิติวิทยา')}
 <div class="brand"><img src="__LOGO__" alt="Dr.VIT &amp; PD"><span>แอปประจำเล่ม<br>การบัญชีนิติวิทยา</span></div>
 <header><div class="k">ตำราเล่มนี้</div><h1>แอปประจำเล่ม การบัญชีนิติวิทยา</h1>
-<p>Forensic Accounting · ดร.วิทยา อรุณศิริเพ็ชร และ อาจารย์พงษ์ธร ดวงปัญญา</p><div style="height:12px"></div></header>
+<p>Forensic Accounting · ดร.วิทยา อรุณศิริเพ็ชร และ อาจารย์พงษ์ธร ดวงปัญญา</p></header>
 <main><h2>วิธีใช้คู่กับตำรา</h2>
 <p>แต่ละบทมีแอปฝึกที่ใช้ข้อมูลชุดเดียวกับตำรา พร้อมเฉลยและเหตุผลของแบบทดสอบปรนัย แบบประเมินตนเองตาม LO และอภิธานศัพท์ ผู้อ่านควรทำแบบทดสอบในเล่มให้ครบก่อนเปิดเฉลยในแอป</p>
 <h2>รายการแอป</h2>
@@ -255,7 +256,7 @@ $('#eye').onclick=()=>{{const i=$('#code');i.type=i.type==='password'?'text':'pa
 async function tryGate(){{const c=$('#code').value.replace(/[\\s-]/g,'').toUpperCase();const h=await sha(c);
  if(h===GATE_HASH){{try{{($('#rem').checked?localStorage:sessionStorage).setItem('fa.gate',h)}}catch(e){{}}okGate()}}else{{$('#err').textContent='รหัสไม่ถูกต้อง โปรดดูรหัสที่พิมพ์ไว้ในตำรา'}}}}
 $('#go').onclick=tryGate;$('#code').addEventListener('keydown',e=>{{if(e.key==='Enter')tryGate()}});</script></body></html>'''
-(ROOT.parent / 'docs/index.html').write_text(idx.replace('__LOGO__', LOGO), encoding='utf-8')
+(ROOT.parent / 'docs/index.html').write_text(skin(idx.replace('__LOGO__', LOGO)), encoding='utf-8')
 import qrcode
 (ROOT.parent / 'docs/qr').mkdir(exist_ok=True)
 for name, url in [('ch01', BASE + 'ch01.html'), ('ch02', BASE + 'ch02.html'), ('index', BASE)]:
