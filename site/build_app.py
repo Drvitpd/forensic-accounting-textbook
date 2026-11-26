@@ -224,9 +224,9 @@ show(store.get('tab')||'m1');
 </script></body></html>'''
 
 out = page.replace('__DATA__', DATA).replace('__HASH__', GATE_HASH).replace('__LOGO__', LOGO)
-(ROOT / 'docs').mkdir(exist_ok=True)
-(ROOT / 'docs/ch01.html').write_text(out, encoding='utf-8')
-(ROOT / 'docs/.nojekyll').write_text('')
+(ROOT.parent / 'docs').mkdir(exist_ok=True)
+(ROOT.parent / 'docs/ch01.html').write_text(out, encoding='utf-8')
+(ROOT.parent / 'docs/.nojekyll').write_text('')
 print('ok', len(out))
 
 # ---------- index + QR ----------
@@ -244,7 +244,8 @@ idx = f'''<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name=
 <p>แต่ละบทมีแอปฝึกที่ใช้ข้อมูลชุดเดียวกับตำรา พร้อมเฉลยและเหตุผลของแบบทดสอบปรนัย แบบประเมินตนเองตาม LO และอภิธานศัพท์ ผู้อ่านควรทำแบบทดสอบในเล่มให้ครบก่อนเปิดเฉลยในแอป</p>
 <h2>รายการแอป</h2>
 <div class="card"><span class="tag">บทที่ 1</span><b><a href="ch01.html">แอป 01 จำแนกงานนิติวิทยา</a></b><br>การบัญชีนิติวิทยาและวิชาชีพ · จำแนกงานตาม SSFS · เลือกทีม · ประเมินเหตุอันควรสงสัย</div>
-<p class="lead">แอปของบทที่ 2 ถึง 16 จะเพิ่มตามลำดับเมื่อแต่ละบทผ่านการตรวจ</p></main>
+<div class="card"><span class="tag">บทที่ 2</span><b><a href="ch02.html">แอป 02 จากปัจจัยสู่สมมติฐาน</a></b><br>ทฤษฎีการทุจริตและอาชญาวิทยา · จำแนกข้อเท็จจริงตามปัจจัย · สัญญาณเตือนที่ตรวจได้ · เขียนสมมติฐานการทุจริต</div>
+<p class="lead">แอปของบทที่ 3 ถึง 16 จะเพิ่มตามลำดับเมื่อแต่ละบทผ่านการตรวจ</p></main>
 <footer>เนื้อหาเป็นการถอดความของคณะผู้เขียน ไม่ใช่ถ้อยคำของมาตรฐาน · กิจการ บุคคล และตัวเลขในแอปเป็นสมมติ<br>ดร.วิทยา อรุณศิริเพ็ชร และ อาจารย์พงษ์ธร ดวงปัญญา · Dr.VIT &amp; PD</footer>
 <script>const GATE_HASH='{GATE_HASH}';const $=s=>document.querySelector(s);
 async function sha(s){{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}}
@@ -254,9 +255,9 @@ $('#eye').onclick=()=>{{const i=$('#code');i.type=i.type==='password'?'text':'pa
 async function tryGate(){{const c=$('#code').value.replace(/[\\s-]/g,'').toUpperCase();const h=await sha(c);
  if(h===GATE_HASH){{try{{($('#rem').checked?localStorage:sessionStorage).setItem('fa.gate',h)}}catch(e){{}}okGate()}}else{{$('#err').textContent='รหัสไม่ถูกต้อง โปรดดูรหัสที่พิมพ์ไว้ในตำรา'}}}}
 $('#go').onclick=tryGate;$('#code').addEventListener('keydown',e=>{{if(e.key==='Enter')tryGate()}});</script></body></html>'''
-(ROOT / 'docs/index.html').write_text(idx.replace('__LOGO__', LOGO), encoding='utf-8')
+(ROOT.parent / 'docs/index.html').write_text(idx.replace('__LOGO__', LOGO), encoding='utf-8')
 import qrcode
-(ROOT / 'docs/qr').mkdir(exist_ok=True)
-for name, url in [('ch01', BASE + 'ch01.html'), ('index', BASE)]:
-    qrcode.make(url, border=1, box_size=12).save(ROOT / f'docs/qr/{name}.png')
+(ROOT.parent / 'docs/qr').mkdir(exist_ok=True)
+for name, url in [('ch01', BASE + 'ch01.html'), ('ch02', BASE + 'ch02.html'), ('index', BASE)]:
+    qrcode.make(url, border=1, box_size=12).save(ROOT.parent / f'docs/qr/{name}.png')
 print('index + qr ok')
